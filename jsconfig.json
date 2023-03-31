@@ -1,0 +1,12 @@
+// configuration file
+{
+  "compilerOptions": {
+    "baseUrl": ".", //root folder
+    //paths are aliases to folder
+    "paths": {
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@styles/*": ["styles/*"]
+    }
+  }
+}

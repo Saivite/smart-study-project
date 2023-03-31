@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fit {
+    /* it tells page will be displayed 100vh, as 88vh is reserved for footer */
+  min-height: calc(100vh - 88px);
+}
