@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Navbar() {
   return (
     <section>
@@ -5,38 +7,38 @@ export default function Navbar() {
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between">
             <div>
-              <a
-                href="#"
+              <Link
+                href="/"
                 className="font-medium mr-8 text-gray-500 hover:text-gray-900"
               >
-                Product
-              </a>
-              <a
-                href="#"
-                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-              >
-                Features
-              </a>
-              <a
-                href="#"
+                Home
+              </Link>
+              <Link
+                href="/marketplace "
                 className="font-medium mr-8 text-gray-500 hover:text-gray-900"
               >
                 Marketplace
-              </a>
-            </div>
-            <div>
-              <a
-                href="#"
+              </Link>
+              <Link
+                href="/blogs"
                 className="font-medium mr-8 text-gray-500 hover:text-gray-900"
               >
-                Company
-              </a>
-              <a
-                href="#"
-                className="font-medium mr-8 text-indigo-600 hover:text-indigo-500"
+                Blogs
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/wishlist"
+                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
               >
-                Log in
-              </a>
+                Wishlist
+              </Link>
+              <Link
+                href="/"
+                className="px-8 py-3 border text-base rounded-md  font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+              >
+                Connect
+              </Link>
             </div>
           </div>
         </nav>
