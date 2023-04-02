@@ -54,7 +54,7 @@ export default function Web3Provider({ children }) {
         //these functions will be created when web3Api will change, if not change same version will be provided
         // isWeb3Loaded: !web3Api.isLoading && web3Api.web3,
         isWeb3Loaded: web3 != null,
-        hooks: setupHooks(web3),
+        getHooks: () => setupHooks(web3),
         connect: provider
           ? async () => {
               try {
@@ -89,4 +89,10 @@ export function useWeb3() {
   //return the values
   return useContext(Web3Context);
   //we  can use the values passed to components using useContext() function
+}
+
+export function useHooks(cb) {
+  const { getHooks } = useWeb3();
+  const hooks = getHooks();
+  return cb(hooks);
 }
