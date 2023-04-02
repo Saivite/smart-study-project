@@ -32,7 +32,6 @@ export default function Course({ course }) {
   );
 }
 
-//for how many pages we would like to create and what parameters we would return to getStaticProps() for every page
 export function getStaticPaths() {
   const { data } = getAllCourses();
   return {
