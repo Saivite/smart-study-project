@@ -7,6 +7,7 @@ const {
 } = require("react");
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
+import { setupHooks } from "./hooks/setupHooks";
 
 //if context is not provided
 const Web3Context = createContext(null);
@@ -46,16 +47,18 @@ export default function Web3Provider({ children }) {
   //useMemo is used for catching purposes, it will return new object only when web3Api will change
   const _web3Api = useMemo(
     () => {
+      const { web3, provider } = web3Api;
       //return an object only when dependencies of object will change
       return {
         ...web3Api,
         //these functions will be created when web3Api will change, if not change same version will be provided
         // isWeb3Loaded: !web3Api.isLoading && web3Api.web3,
-        isWeb3Loaded: web3Api.web3 != null,
-        connect: web3Api.provider
+        isWeb3Loaded: web3 != null,
+        hooks: setupHooks(web3),
+        connect: provider
           ? async () => {
               try {
-                await web3Api.provider.request({
+                await provider.request({
                   method: "eth_requestAccounts",
                 });
               } catch (error) {
