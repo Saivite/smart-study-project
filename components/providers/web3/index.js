@@ -50,7 +50,8 @@ export default function Web3Provider({ children }) {
       return {
         ...web3Api,
         //these functions will be created when web3Api will change, if not change same version will be provided
-        isWeb3Loaded: !web3Api.isLoading && web3Api.web3,
+        // isWeb3Loaded: !web3Api.isLoading && web3Api.web3,
+        isWeb3Loaded: web3Api.web3 != null,
         connect: web3Api.provider
           ? async () => {
               try {
