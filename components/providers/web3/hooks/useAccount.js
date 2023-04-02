@@ -16,5 +16,13 @@ export const handler = (web3) => () => {
     web3 && getAccount();
   }, [web3]);
 
+  useEffect(() => {
+    //You can also setup using provider
+    window.ethereum &&
+      window.ethereum.on("accountsChanged", (accounts) => {
+        setAccount(accounts[0] ?? null);
+      });
+  }, []);
+
   return { account };
 };
