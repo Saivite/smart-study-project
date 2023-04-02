@@ -49,7 +49,16 @@ export default function Navbar() {
                   Loading...
                 </Button>
               ) : isWeb3Loaded ? (
-                <Button onClick={connect}>Connect</Button>
+                account ? (
+                  <Button
+                    hoverable={false}
+                    className="cursor-default hover:opacity-100"
+                  >
+                    Hi There
+                  </Button>
+                ) : (
+                  <Button onClick={connect}>Connect</Button>
+                )
               ) : (
                 <Button
                   onClick={() =>
