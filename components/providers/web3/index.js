@@ -1,4 +1,10 @@
-const { createContext, useContext, useEffect, useState } = require("react");
+const {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} = require("react");
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
@@ -6,13 +12,15 @@ import Web3 from "web3";
 const Web3Context = createContext(null);
 
 //here we'll load web3, integrate with metamask - load provider and create instance of it
+
+//we are using architecture of context, if there is a component where we need to provide some context i.e some set of values to all children ele ments
 export default function Web3Provider({ children }) {
   const [web3Api, setWeb3Api] = useState({
     //we'll keep the state in web3Api and return this as context of all components
     provider: null,
     web3: null,
     contract: null,
-    isInitialized: false,
+    isLoading: true,
   });
 
   useEffect(() => {
@@ -25,19 +33,46 @@ export default function Web3Provider({ children }) {
           provider,
           web3,
           contarct: null,
-          isInitialized: true,
+          isLoading: false,
         });
       } else {
-        setWeb3Api((api) => ({ ...api, isInitialized: true }));
+        setWeb3Api((api) => ({ ...api, isLoading: false }));
         console.error("Please Install Metamask");
       }
     };
     loadProvider();
   }, []);
 
-  //we are using architecture of context, if there is a component where we need to provide some context i.e some set of values to all children ele ments
+  //useMemo is used for catching purposes, it will return new object only when web3Api will change
+  const _web3Api = useMemo(
+    () => {
+      //return an object only when dependencies of object will change
+      return {
+        ...web3Api,
+        //these functions will be created when web3Api will change, if not change same version will be provided
+        connect: web3Api.provider
+          ? async () => {
+              try {
+                await web3Api.provider.request({
+                  method: "eth_requestAccounts",
+                });
+              } catch (error) {
+                location.reload();
+                console.error("Cannot Retrieve Account");
+              }
+            }
+          : () =>
+              console.error(
+                "Cannot connect to Metamask, try to reload your browser please."
+              ),
+      };
+    },
+    /* set of dependencies*/ [web3Api]
+  );
+
+  //function to connect to metamaske and pass that function to web3Api
   return (
-    <Web3Context.Provider value={web3Api}>
+    <Web3Context.Provider value={_web3Api}>
       {/* passing the values to all children elements */}
       {children}
     </Web3Context.Provider>
