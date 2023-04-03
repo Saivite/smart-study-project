@@ -1,5 +1,5 @@
 import { Hero } from "@components/ui/common";
-import { CourseList } from "@components/ui/course";
+import { CourseCard, CourseList } from "@components/ui/course";
 import { getAllCourses } from "@content/courses/fetcher";
 import { BaseLayout } from "@components/ui/layout";
 // import { useWeb3 } from "@components/providers";
@@ -14,7 +14,9 @@ export default function Home({ courses }) {
         ? "Web3 Ready"
         : "Please Install Metamask"} */}
       <Hero />
-      <CourseList courses={courses} />
+      <CourseList courses={courses}>
+        {(course) => <CourseCard key={course.id} course={course} />}
+      </CourseList>
     </>
   );
 }
