@@ -12,7 +12,6 @@ export default function Navbar() {
 
   return (
     <section>
-      {account}
       <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
@@ -49,12 +48,12 @@ export default function Navbar() {
                   Loading...
                 </Button>
               ) : isWeb3Loaded ? (
-                account ? (
+                account.data ? (
                   <Button
                     hoverable={false}
                     className="cursor-default hover:opacity-100"
                   >
-                    Hi There
+                    Hi There {account.isAdmin && "Admin"}
                   </Button>
                 ) : (
                   <Button onClick={connect}>Connect</Button>
@@ -72,6 +71,14 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
+      {account.data && (
+        <div className="flex justify-end pt-2=1 sm:px-6 lg:px-8">
+          <div className="text-white bg-indigo-600 rounded-md p-2">
+            {console.log(account.dat)}
+            {account.data}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

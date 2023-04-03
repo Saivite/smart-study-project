@@ -54,7 +54,7 @@ export default function Web3Provider({ children }) {
         //these functions will be created when web3Api will change, if not change same version will be provided
         // isWeb3Loaded: !web3Api.isLoading && web3Api.web3,
         isWeb3Loaded: web3 != null,
-        getHooks: () => setupHooks(web3),
+        getHooks: () => setupHooks(web3, provider),
         connect: provider
           ? async () => {
               try {
