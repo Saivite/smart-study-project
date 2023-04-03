@@ -1,7 +1,8 @@
 import { useWeb3 } from "@components/providers";
 import Link from "next/link";
 import { Button } from "@components/ui/common";
-import { useAccount } from "@components/web3/hooks/useAccount";
+import { useAccount } from "@components/hooks/web3/useAccount";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
   const { connect, isLoading, isWeb3Loaded, web3 } = useWeb3();
@@ -9,6 +10,7 @@ export default function Navbar() {
   //this will return a function
   // const _useAccount = useAccount(web3);
   // const { account } = _useAccount();
+  const { pathname } = useRouter();
 
   return (
     <section>
@@ -71,7 +73,7 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
-      {account.data && (
+      {account.data && !pathname.includes("/marketplace") && (
         <div className="flex justify-end pt-2=1 sm:px-6 lg:px-8">
           <div className="text-white bg-indigo-600 rounded-md p-2">
             {console.log(account.dat)}
