@@ -49,13 +49,15 @@ export default function Web3Provider({ children }) {
   //useMemo is used for catching purposes, it will return new object only when web3Api will change
   const _web3Api = useMemo(
     () => {
-      const { web3, provider } = web3Api;
+      const { web3, provider, isLoading } = web3Api;
       //return an object only when dependencies of object will change
       return {
         ...web3Api,
         //these functions will be created when web3Api will change, if not change same version will be provided
         // isWeb3Loaded: !web3Api.isLoading && web3Api.web3,
-        isWeb3Loaded: web3 != null,
+        // isWeb3Loaded: web3 != null,
+        //it tells if we require metamask
+        requireInstall: !isLoading && !web3,
         connect: provider
           ? async () => {
               try {
