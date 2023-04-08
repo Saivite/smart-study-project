@@ -11,10 +11,13 @@ const NETWORKS = {
 const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID];
 
 export const handler = (web3, provider) => () => {
-  const { data, mutate, ...rest } = useSWR(
+  const { data, error, mutate, ...rest } = useSWR(
     () => {
       return web3 ? "web3/network" : null;
     },
+    //isValidating tells if the below function is currently loading data
+    //It will be initially false
+    //if data and error is undefined then below function isn't resolved
     async () => {
       const chainId = await web3.eth.getChainId();
       return NETWORKS[chainId];
@@ -29,6 +32,7 @@ export const handler = (web3, provider) => () => {
   return {
     network: {
       data,
+      hasFinishedFirstFetch: data || error,
       mutate,
       target: targetNetwork,
       isSupported: data === targetNetwork,
