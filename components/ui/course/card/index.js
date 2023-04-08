@@ -2,7 +2,7 @@ import Image from "next/image";
 //without loading the entire browser you can navigate the browser
 import Link from "next/link";
 
-export default function CourseCard({ course }) {
+export default function CourseCard({ course, Footer }) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex h-full">
@@ -27,6 +27,7 @@ export default function CourseCard({ course }) {
             {course.title}
           </Link>
           <p className="mt-2 text-gray-500">{course.description}</p>
+          {Footer && <Footer />}
         </div>
       </div>
     </div>
