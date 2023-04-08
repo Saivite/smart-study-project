@@ -1,6 +1,6 @@
 export default function Button({
   children,
-  className = "text-white bg-indigo-600 hover:bg-indigo-700",
+  className,
   variant = "purple",
   hoverable = true,
   //onClick will be passed in rest instead of passing it as onClick={onClick}
