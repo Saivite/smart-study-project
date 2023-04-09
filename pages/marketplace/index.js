@@ -13,6 +13,9 @@ export default function Marketplace({ courses }) {
   const { network } = useNetwork();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const { eth } = useEthPrice();
+
+  const canPurchaseCourse = !!(account.data && network.isSupported);
+
   return (
     <>
       {network.data}
@@ -33,11 +36,13 @@ export default function Marketplace({ courses }) {
           <CourseCard
             key={course.id}
             course={course}
+            disabled={!canPurchaseCourse}
             Footer={() => (
               <div className="mt-4">
                 <Button
                   //this will mutate the instance and course will be received in selectedCourse variable and we can pass it as a prop to the modal
                   onClick={() => setSelectedCourse(course)}
+                  disabled={!canPurchaseCourse}
                   variant="lightPurple"
                 >
                   Purchase
