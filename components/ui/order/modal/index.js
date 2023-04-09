@@ -1,20 +1,36 @@
+import { useEthPrice } from "@components/hooks/useEthPrice";
 import { Button, Modal } from "@components/ui/common";
 import { useEffect, useState } from "react";
 
+const defaultOrder = {
+  price: "",
+  email: "",
+  confirmationEmail: "",
+};
+
 export default function OrderModal({ course, onClose }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { eth } = useEthPrice();
   //as soon as OrderModal receives data, we change the state
+
+  const [order, setOrder] = useState(defaultOrder);
 
   //we can react to the state changes using useEffect
   useEffect(() => {
     if (!!course) {
       //!!null/ undefined = false
       setIsOpen(true);
+      setOrder({
+        ...defaultOrder,
+        price: eth.perItem,
+      });
     }
   }, [course]);
 
   const closeModal = () => {
     setIsOpen(false);
+    //while closing the modal, set default value
+    setOrder(defaultOrder);
     onClose();
   };
   return (
@@ -42,6 +58,17 @@ export default function OrderModal({ course, onClose }) {
                   </div>
                 </div>
                 <input
+                  value={order.price}
+                  onChange={(target) => {
+                    const value = event.target.value;
+                    if (isNaN(value)) {
+                      return;
+                    }
+                    setOrder({
+                      ...order,
+                      price: value,
+                    });
+                  }}
                   type="text"
                   name="price"
                   id="price"
