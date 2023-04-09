@@ -3,11 +3,14 @@ import { getAllCourses } from "@content/courses/fetcher";
 import { BaseLayout } from "@components/ui/layout";
 import { WalletBar } from "@components/ui/web3";
 import { useAccount, useNetwork } from "@components/hooks/web3";
-import { Button, Modal } from "@components/ui/common";
+import { Button } from "@components/ui/common";
+import { OrderModal } from "@components/ui/order";
+import { useState } from "react";
 
 export default function Marketplace({ courses }) {
   const { account } = useAccount();
   const { network } = useNetwork();
+  const [selectedCourse, setSelectedCourse] = useState(null);
   return (
     <>
       {network.data}
@@ -29,13 +32,24 @@ export default function Marketplace({ courses }) {
             course={course}
             Footer={() => (
               <div className="mt-4">
-                <Button variant="lightPurple">Purchase</Button>
+                <Button
+                  //this will mutate the instance and course will be received in selectedCourse variable and we can pass it as a prop to the modal
+                  onClick={() => setSelectedCourse(course)}
+                  variant="lightPurple"
+                >
+                  Purchase
+                </Button>
               </div>
             )}
           />
         )}
       </CourseList>
-      <Modal isOpen={false} />
+      {selectedCourse && (
+        <OrderModal
+          course={selectedCourse}
+          onClose={() => setSelectedCourse(null)}
+        />
+      )}
     </>
   );
 }
