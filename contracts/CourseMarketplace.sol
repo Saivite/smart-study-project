@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.4;
 
 contract CourseMarketplace {
 
@@ -79,9 +79,6 @@ contract CourseMarketplace {
             owner: msg.sender,
             state: State.Purchased
         });
-
-
-
     }
 
 
