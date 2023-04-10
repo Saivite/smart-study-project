@@ -8,6 +8,21 @@ const defaultOrder = {
   confirmationEmail: "",
 };
 
+const _createFormState = (isDisabled = false, message = "") => ({
+  isDisabled,
+  message,
+});
+const createFormState = ({ price, email, confirmationEmail }) => {
+  if (!price || Number(price <= 0)) {
+    return _createFormState(true, "Price is not valid ");
+  } else if (confirmationEmail.length == 0 || email.length == 0) {
+    return _createFormState(true);
+  } else if (email != confirmationEmail) {
+    return _createFormState(true, "Emails arent matching");
+  }
+  return _createFormState;
+};
+
 export default function OrderModal({ course, onClose }) {
   const [isOpen, setIsOpen] = useState(false);
   const { eth } = useEthPrice();
@@ -34,6 +49,9 @@ export default function OrderModal({ course, onClose }) {
     setOrder(defaultOrder);
     onClose();
   };
+
+  const formState = createFormState(order);
+
   return (
     <Modal isOpen={true}>
       <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
@@ -98,11 +116,11 @@ export default function OrderModal({ course, onClose }) {
                   <label className="mb-2 font-bold">Email</label>
                 </div>
                 <input
-                  onChange={(target : {value}) => {
+                  onChange={({ target: { value } }) => {
                     setOrder({
                       ...order,
-                      email: value.trim()
-                    })
+                      email: value.trim(),
+                    });
                   }}
                   type="email"
                   name="email"
@@ -121,11 +139,11 @@ export default function OrderModal({ course, onClose }) {
                   <label className="mb-2 font-bold">Repeat Email</label>
                 </div>
                 <input
-                  onChange={(target : {value}) => {
+                  onChange={({ target: { value } }) => {
                     setOrder({
                       ...order,
-                       confirmationEmail: value.trim()
-                    })
+                      confirmationEmail: value.trim(),
+                    });
                   }}
                   type="email"
                   name="confirmationEmail"
@@ -144,13 +162,23 @@ export default function OrderModal({ course, onClose }) {
                   not correct
                 </span>
               </div>
+              {formState.message && (
+                <div className="p-4 my-3  text-red-700 bg-red-200 rounded-lg text-sm">
+                  {formState.message}
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex">
-          <Button onClick={() => {
-            alert(JSON.stringify(order))
-          }}>Submit</Button>
+          <Button
+            disabled={formState.isDisabled}
+            onClick={() => {
+              alert(JSON.stringify(order));
+            }}
+          >
+            Submit
+          </Button>
           <Button onClick={closeModal} variant="red">
             Cancel
           </Button>
