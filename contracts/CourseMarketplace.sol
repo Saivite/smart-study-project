@@ -32,8 +32,19 @@ contract CourseMarketplace {
     //contract owner address (like an admin)
     address payable private owner;
 
-    ///Course has already Owner
+    ///Only Owner has access
     error CourseHasOwner();
+
+    error OnlyOwner();
+
+    //modifiers
+    modifier onlyOwner(){
+        //if msg.sender is the one who is current owner
+        if(msg.sender != getContractOwner() ){
+            revert OnlyOwner();
+        }
+        _;
+    }
 
     constructor() {
         setContractOwner(msg.sender);
@@ -72,6 +83,11 @@ contract CourseMarketplace {
 
 
     }
+
+
+    function transferOwnership(address newOwner) external onlyOwner { 
+        setContractOwner(newOwner);
+    }
     
     function getCourseCount() external view returns (uint) {
         return totalOwnedCourses;
@@ -88,7 +104,11 @@ contract CourseMarketplace {
         return ownedCourses[courseHash];
     }
 
-    function setContractOwner(address newOwner) private{
+    function getContractOwner() public view returns (address) {
+        return owner;
+    }
+
+    function setContractOwner(address newOwner) private {
         owner = payable(newOwner);
     }
 
