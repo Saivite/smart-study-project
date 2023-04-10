@@ -14,6 +14,7 @@ export default function OrderModal({ course, onClose }) {
   //as soon as OrderModal receives data, we change the state
 
   const [order, setOrder] = useState(defaultOrder);
+  const [enablePrice, setEnablePrice] = useState(false);
 
   //we can react to the state changes using useEffect
   useEffect(() => {
@@ -50,7 +51,18 @@ export default function OrderModal({ course, onClose }) {
                   <label className="mb-2 font-bold">Price(eth)</label>
                   <div className="text-xs text-gray-700 flex">
                     <label className="flex items-center mr-2">
-                      <input type="checkbox" className="form-checkbox" />
+                      <input
+                        checked={enablePrice}
+                        onChange={({ target: { checked } }) => {
+                          setOrder({
+                            ...order,
+                            price: checked ? order.price : eth.perItem,
+                          });
+                          setEnablePrice(checked);
+                        }}
+                        type="checkbox"
+                        className="form-checkbox"
+                      />
                     </label>
                     <span>
                       Adjust Price - only when the price is not correct
@@ -58,6 +70,7 @@ export default function OrderModal({ course, onClose }) {
                   </div>
                 </div>
                 <input
+                  disabled={!enablePrice}
                   value={order.price}
                   onChange={(target) => {
                     const value = event.target.value;
