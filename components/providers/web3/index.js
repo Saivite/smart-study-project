@@ -33,7 +33,7 @@ export default function Web3Provider({ children }) {
         //create instance of web3
         const web3 = new Web3(provider);
         //load instance of contract
-        const contract = await loadContract("CourseMarketplace", provider);
+        const contract = await loadContract("CourseMarketplace", web3);
         console.log(contract);
         setWeb3Api({
           provider,
