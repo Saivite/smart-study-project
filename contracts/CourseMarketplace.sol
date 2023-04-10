@@ -1,7 +1,5 @@
 //SPDX-License-Identifier: MIT
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
-pragma solidity 0.8.4;
-
+pragma solidity ^0.8.19;
 
 contract CourseMarketplace {
     constructor() {
@@ -24,17 +22,57 @@ contract CourseMarketplace {
         State state; //1 byte
     }
 
+    //mapping of course hash to course data
+    mapping (bytes32 => Course) private ownedCourses;
+
+    //mapping of course id to course hash 
+    mapping (uint => bytes32) private ownedCourseHash;
+
+    //number of owned courses + id of the course
+    uint private totalOwnedCourses;
+
     function purchaseCourse (
         //get the id of course that we store in application
         bytes16 courseId,
-        bytes32 proof
-    ) external payable returns(bytes32)
+        bytes32 proof // 0000000000000000000000000000313000000000000000000000000000003130
+    ) external payable 
     {
         //construct course hash which we store in mapping Course hash will be mapped to course data
         //we use encodePacked when we need to hash multiple values
         //this will also allow user to purchase course only  once
+        //Eg: course Id - 10 (Ascii of 10 - 3130(in hex))
+        //      00000000000000000000000000003130
+        //msg sender-  0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
+        //  keccak256 - 0xc4eaa3558504e2baa2669001b43f359b8418b44a4477ff417b4b007d7cc86e37
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
-        return courseHash;
+        uint id = totalOwnedCourses++;
+        ownedCourseHash[id] = courseHash;
+        //through course hash you'll be able to access course data
+        ownedCourses[courseHash] = Course({
+            id: id,
+            price: msg.value,
+            //proof will be sent along the transaction
+            proof: proof, 
+            owner: msg.sender,
+            state: State.Purchased
+        });
 
+
+
+    }
+    
+    function getCourseCount() external view returns (uint) {
+        return totalOwnedCourses;
+    }
+
+    //it required index as parameter
+
+    function getCourseHashIndex(uint index) external view returns (bytes32) {
+        return ownedCourseHash[index];
+    }
+
+    //while returning struct specify memory
+    function getCourseByHash(bytes32 courseHash) external view returns (Course memory) {
+        return ownedCourses[courseHash];
     }
 }
