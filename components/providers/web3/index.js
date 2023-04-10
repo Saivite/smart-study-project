@@ -8,6 +8,7 @@ const {
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 import { setupHooks } from "./hooks/setupHooks";
+import { loadContract } from "@utils/loadContract";
 
 //if context is not provided
 const Web3Context = createContext(null);
@@ -31,10 +32,12 @@ export default function Web3Provider({ children }) {
       if (provider) {
         //create instance of web3
         const web3 = new Web3(provider);
+        //load instance of contract
+        const contract = loadContract("CourseMarketplace", provider);
         setWeb3Api({
           provider,
           web3,
-          contarct: null,
+          contract,
           isLoading: false,
           hooks: setupHooks(web3, provider),
         });
