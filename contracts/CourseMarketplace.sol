@@ -24,4 +24,17 @@ contract CourseMarketplace {
         State state; //1 byte
     }
 
+    function purchaseCourse (
+        //get the id of course that we store in application
+        bytes16 courseId,
+        bytes32 proof
+    ) external payable returns(bytes32)
+    {
+        //construct course hash which we store in mapping Course hash will be mapped to course data
+        //we use encodePacked when we need to hash multiple values
+        //this will also allow user to purchase course only  once
+        bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
+        return courseHash;
+
+    }
 }
