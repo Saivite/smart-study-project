@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 contract CourseMarketplace {
     constructor() {
         
-    }
+    } 
     //When you purchase the course, course will have some states 
     enum State {
         Purchased,
@@ -31,6 +31,9 @@ contract CourseMarketplace {
     //number of owned courses + id of the course
     uint private totalOwnedCourses;
 
+    ///Course has already Owner
+    error CourseHasOwner();
+
     function purchaseCourse (
         //get the id of course that we store in application
         bytes16 courseId,
@@ -45,6 +48,10 @@ contract CourseMarketplace {
         //msg sender-  0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
         //  keccak256 - 0xc4eaa3558504e2baa2669001b43f359b8418b44a4477ff417b4b007d7cc86e37
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
+
+        if(hasCourseOwnership(courseHash)){
+            revert CourseHasOwner();
+        }
         uint id = totalOwnedCourses++;
         ownedCourseHash[id] = courseHash;
         //through course hash you'll be able to access course data
@@ -74,5 +81,11 @@ contract CourseMarketplace {
     //while returning struct specify memory
     function getCourseByHash(bytes32 courseHash) external view returns (Course memory) {
         return ownedCourses[courseHash];
+    }
+
+
+    //helper function
+    function hasCourseOwnership(bytes32 courseHash) private view returns (bool) {
+        return ownedCourses[courseHash].owner == msg.sender;
     }
 }
