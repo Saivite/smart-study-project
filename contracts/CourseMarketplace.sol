@@ -2,9 +2,7 @@
 pragma solidity ^0.8.19;
 
 contract CourseMarketplace {
-    constructor() {
-        
-    } 
+
     //When you purchase the course, course will have some states 
     enum State {
         Purchased,
@@ -31,8 +29,15 @@ contract CourseMarketplace {
     //number of owned courses + id of the course
     uint private totalOwnedCourses;
 
+    //contract owner address (like an admin)
+    address payable private owner;
+
     ///Course has already Owner
     error CourseHasOwner();
+
+    constructor() {
+        setContractOwner(msg.sender);
+    } 
 
     function purchaseCourse (
         //get the id of course that we store in application
@@ -83,6 +88,9 @@ contract CourseMarketplace {
         return ownedCourses[courseHash];
     }
 
+    function setContractOwner(address newOwner) private{
+        owner = payable(newOwner);
+    }
 
     //helper function
     function hasCourseOwnership(bytes32 courseHash) private view returns (bool) {
