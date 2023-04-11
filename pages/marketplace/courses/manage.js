@@ -6,10 +6,8 @@ import { MarketHeader } from "@components/ui/marketplace";
 export default function ManageCourses() {
   return (
     <>
-      <div className="py-4">
-        <MarketHeader />
-        <CourseFilter />
-      </div>
+      <MarketHeader />
+      <CourseFilter />
       <section className="grid grid-cols-1">
         <OwnedCourseCard>
           <div className="flex mr-2 relative rounded-md">
