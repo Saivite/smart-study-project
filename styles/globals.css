@@ -7,6 +7,10 @@
   min-height: calc(100vh - 88px);
 }
 
+.next-image-cover > div {
+  height: 100%;
+}
+
 .object-cover {
   height: 100%;
 }

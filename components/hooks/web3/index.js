@@ -31,7 +31,8 @@ export const useOwnedCourses = (...args) => {
   );
   return {
     //res is `useOwnedCourses is working`
-    ownedCourses: { data: swrRes },
+
+    ownedCourses: swrRes,
   };
 };
 

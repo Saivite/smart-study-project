@@ -9,16 +9,23 @@ export default function OwnedCourses({ courses }) {
   const { account } = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
 
+  // const json =
+  // const obj = JSON.parse(json);
+
   return (
     <>
       <div className="py-4">
         <MarketHeader />
       </div>
       <section className="grid grid-cols-1">
-        <OwnedCourseCard>
-          <Message type="warn">My Custom Message</Message>
-          <Button>Watch The Course</Button>
-        </OwnedCourseCard>
+        {ownedCourses.data &&
+          ownedCourses.data.map((course) => (
+            //we need to pass key as we're iterating
+            <OwnedCourseCard key={course.id} course={course}>
+              <Message type="warn">My Custom Message</Message>
+              <Button>Watch The Course</Button>
+            </OwnedCourseCard>
+          ))}
       </section>
     </>
   );

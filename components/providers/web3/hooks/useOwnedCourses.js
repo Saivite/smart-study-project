@@ -4,8 +4,10 @@ import useSWR from "swr";
 export const handler = (web3, contract) => (courses, account) => {
   //function is returning a function
   const swrRes = useSWR(
-    () => (web3 && account && contract ? "web3/ownedCourses" : null),
+    //as account will change useSWR will refetch data
+    () => (web3 && account && contract ? `web3/ownedCourses/${account}` : null),
     async () => {
+      console.log("Calling useOwnedCOurses");
       const ownedCourses = [];
       for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
@@ -38,12 +40,10 @@ export const handler = (web3, contract) => (courses, account) => {
         if (
           ownedCourse.owner !== "0x0000000000000000000000000000000000000000"
         ) {
-          const normalize = normalizeOwnedCourse(web3);
-          const normalized = normalize(course, ownedCourse);
+          const normalized = normalizeOwnedCourse(web3)(course, ownedCourse);
           ownedCourses.push(normalized);
         }
       }
-      console.log(ownedCourses);
       return ownedCourses;
     }
   );
