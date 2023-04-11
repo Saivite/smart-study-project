@@ -25,11 +25,11 @@ export const useAccount = () => {
   });
 };
 
-export const useOwnedCourses = () => {
-  const res = useHooks((hooks) => hooks.useOwnedCourses)();
+export const useOwnedCourses = (...args) => {
+  const swrRes = useHooks((hooks) => hooks.useOwnedCourses)(...args);
   return {
     //res is `useOwnedCourses is working`
-    ownedCourses: { data: res },
+    ownedCourses: swrRes,
   };
 };
 
