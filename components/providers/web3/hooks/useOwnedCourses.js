@@ -1,3 +1,4 @@
+import { normalizeOwnedCourse } from "@utils/normalize";
 import useSWR from "swr";
 
 export const handler = (web3, contract) => (courses, account) => {
@@ -37,10 +38,12 @@ export const handler = (web3, contract) => (courses, account) => {
         if (
           ownedCourse.owner !== "0x0000000000000000000000000000000000000000"
         ) {
-          ownedCourses.push(ownedCourse);
+          const normalize = normalizeOwnedCourse(web3);
+          const normalized = normalize(course, ownedCourse);
+          ownedCourses.push(normalized);
         }
       }
-      debugger;
+      console.log(ownedCourses);
       return ownedCourses;
     }
   );
