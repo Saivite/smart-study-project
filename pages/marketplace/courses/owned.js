@@ -19,7 +19,7 @@ export default function OwnedCourses({ courses }) {
           ownedCourses.data.map((course) => (
             //we need to pass key as we're iterating
             <OwnedCourseCard key={course.id} course={course}>
-              <Message type="warn">My Custom Message</Message>
+              {/* <Message type="warn">My Custom Message</Message> */}
               <Button onClick={() => router.push(`/courses/${course.slug}`)}>
                 Watch The Course
               </Button>
