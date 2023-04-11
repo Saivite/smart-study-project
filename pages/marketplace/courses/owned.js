@@ -4,14 +4,13 @@ import { OwnedCourseCard } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { getAllCourses } from "@content/courses/fetcher";
+import { useRouter } from "next/router";
 
 export default function OwnedCourses({ courses }) {
   const { account } = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
 
-  // const json =
-  // const obj = JSON.parse(json);
-
+  const router = useRouter();
   return (
     <>
       <MarketHeader />
@@ -21,7 +20,9 @@ export default function OwnedCourses({ courses }) {
             //we need to pass key as we're iterating
             <OwnedCourseCard key={course.id} course={course}>
               <Message type="warn">My Custom Message</Message>
-              <Button>Watch The Course</Button>
+              <Button onClick={() => router.push(`/courses/${course.slug}`)}>
+                Watch The Course
+              </Button>
             </OwnedCourseCard>
           ))}
       </section>
