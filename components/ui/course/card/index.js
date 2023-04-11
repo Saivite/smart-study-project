@@ -18,16 +18,16 @@ export default function CourseCard({ course, disabled, Footer }) {
           />
         </div>
         <div className="p-8 pb-4 flex-2">
-          <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+          <div className="uppercase tracking-wide text-sm xs:text-sm text-indigo-500 font-semibold">
             {course.type}
           </div>
           <Link
             href={`/courses/${course.slug}`}
-            className="h-12 block mt-1 text-lg leading-tight font-medium text-black hover:underline"
+            className="h-12 block mt-1 text-lg xs:text-sm leading-tight font-medium text-black hover:underline"
           >
             {course.title}
           </Link>
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-gray-500 xs:text-sm">
             {course.description.substring(0, 70)}...
           </p>
           {Footer && <Footer />}

@@ -12,12 +12,13 @@ export default function Button({
     lightPurple: `text-indigo-700 bg-indigo-100 ${
       hoverable && "hover:bg-indigo-200"
     }`,
+    white: `text-black bg-white`,
   };
 
   return (
     <button
       {...rest}
-      className={`disabled:opacity-50 disabled:cursor-not-allowed px-8 py-3 border text-base rounded-md  font-medium ${className} ${variants[variant]}`}
+      className={`disabled:opacity-50 disabled:cursor-not-allowed xs:px-8 xs:py-3 sm:p-2 border text-base rounded-md  font-medium ${className} ${variants[variant]}`}
     >
       {children}
     </button>
