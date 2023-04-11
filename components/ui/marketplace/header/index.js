@@ -23,8 +23,8 @@ export default function Header(params) {
         <WalletBar />
       </div>
       <EthRates />
-      <div className="flex flex-row-reverse p-4 sm:px-6 lg:px-8">
-        <Breadcrumbs items={LINKS} />
+      <div className="flex flex-row-reverse  p-4 sm:px-6 lg:px-8">
+        <Breadcrumbs className="text-sm" items={LINKS} />
       </div>
     </>
   );

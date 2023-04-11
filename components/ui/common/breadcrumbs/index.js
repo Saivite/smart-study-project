@@ -11,7 +11,7 @@ export default function Breadcrumbs({ items }) {
               i == 0 ? "pr-4" : "px-4"
             } font-medium   text-gray-500 hover:text-gray-900`}
           >
-            <ActiveLink href={item.href} className="text-lg">
+            <ActiveLink href={item.href} className="text-md">
               {item.value}
             </ActiveLink>
           </li>
