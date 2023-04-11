@@ -13,18 +13,29 @@ import { loadContract } from "@utils/loadContract";
 //if context is not provided
 const Web3Context = createContext(null);
 
+const createWeb3State = ({ web3, provider, contract, isLoading }) => {
+  return {
+    web3,
+    provider,
+    contract,
+    isLoading,
+    hooks: setupHooks({ web3, provider, contract }),
+  };
+};
+
 //here we'll load web3, integrate with metamask - load provider and create instance of it
 
 //we are using architecture of context, if there is a component where we need to provide some context i.e some set of values to all children ele ments
 export default function Web3Provider({ children }) {
-  const [web3Api, setWeb3Api] = useState({
+  const [web3Api, setWeb3Api] = useState(
     //we'll keep the state in web3Api and return this as context of all components
-    provider: null,
-    web3: null,
-    contract: null,
-    isLoading: true,
-    hooks: setupHooks({ web3: null, provider: null, contract: null }),
-  });
+    createWeb3State({
+      web3: null,
+      provider: null,
+      contract: null,
+      isLoading: true,
+    })
+  );
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -35,13 +46,9 @@ export default function Web3Provider({ children }) {
         //load instance of contract
         const contract = await loadContract("CourseMarketplace", web3);
         console.log(contract);
-        setWeb3Api({
-          provider,
-          web3,
-          contract,
-          isLoading: false,
-          hooks: setupHooks({ web3, provider, contract }),
-        });
+        setWeb3Api(
+          createWeb3State({ web3, provider, contract, isLoading: false })
+        );
       } else {
         setWeb3Api((api) => ({ ...api, isLoading: false }));
         console.error("Please Install Metamask");
