@@ -11,12 +11,19 @@ import { useWeb3 } from "@components/providers";
 export default function Marketplace({ courses }) {
   const { account, network, canPurchaseCourse } = useWalletInfo();
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const { web3 } = useWeb3();
+  const { web3, contract } = useWeb3();
 
-  const purchaseCourse = (order) => {
+  const purchaseCourse = async (order) => {
     //course in hexa decimal
+
+    // hex course id:
+    // 0x31343130343734000000000000000000
+    // address
+    // 0x0Df6314ccb1715C6F3BEcF62119216e01663C9cA
+
+    // 313431303437340000000000000000000Df6314ccb1715C6F3BEcF62119216e01663C9cA
+
     const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id);
-    console.log(hexCourseId);
 
     //course proof -  emailHash +  courseHash
     //soliditySha3 is same as keccak256
@@ -24,16 +31,29 @@ export default function Marketplace({ courses }) {
       { type: "bytes16", value: hexCourseId },
       { type: "address", value: account.data }
     );
-    console.log(orderHash);
 
     const emailHash = web3.utils.sha3(order.email);
-    console.log(emailHash);
 
     const proof = web3.utils.soliditySha3(
       { type: "bytes32", value: emailHash },
       { type: "bytes32", value: orderHash }
     );
-    console.log(proof);
+
+    const value = web3.utils.toWei(String(order.price));
+
+    try {
+      const result = await contract.methods
+        .purchaseCourse(
+          //order id, proof
+          hexCourseId,
+          proof
+          //specify from which account we're sending
+        )
+        .send({ from: account.data, value });
+      console.log(result);
+    } catch (error) {
+      console.error("Purchase Course: Operation has failed. ");
+    }
   };
 
   return (
