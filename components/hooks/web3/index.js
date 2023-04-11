@@ -26,10 +26,12 @@ export const useAccount = () => {
 };
 
 export const useOwnedCourses = (...args) => {
-  const swrRes = useHooks((hooks) => hooks.useOwnedCourses)(...args);
+  const swrRes = enhanceHooks(
+    useHooks((hooks) => hooks.useOwnedCourses)(...args)
+  );
   return {
     //res is `useOwnedCourses is working`
-    ownedCourses: swrRes,
+    ownedCourses: { data: swrRes },
   };
 };
 
