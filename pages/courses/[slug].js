@@ -1,5 +1,6 @@
 //each course page is rendered by slug
 import { useAccount, useOwnedCourse } from "@components/hooks/web3";
+import { useWeb3 } from "@components/providers";
 import { Button, Message, Modal } from "@components/ui/common";
 import { CourseHero, Curriculum, Keypoints } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
@@ -7,12 +8,20 @@ import { getAllCourses } from "@content/courses/fetcher";
 import Link from "next/link";
 
 export default function Course({ course }) {
+  const { isLoading } = useWeb3();
   const { account } = useAccount();
   const { ownedCourse } = useOwnedCourse(course, account.data);
-  const courseState = ownedCourse.data != null && ownedCourse.data.state;
+  // if (ownedCourse.data.state) {
+  //   const courseState = ownedCourse.data.state;
+  // }
+  const courseState = ownedCourse.data?.state;
+  console.log(courseState);
+  // console.log(ownedCourse.data.state);
   // const courseState = "Activated";
 
-  const isLocked = courseState == "Purchased" || courseState == "Deactivated";
+  const isLocked =
+    //if there is no courseState, then also course is locked
+    !courseState || courseState == "Purchased" || courseState == "Deactivated";
 
   return (
     <>
@@ -63,7 +72,11 @@ export default function Course({ course }) {
       )}
       {/*------ KEYPOINT ENDS ------*/}
       {/*------ LECTURES STARTS ------*/}
-      <Curriculum locked={isLocked} courseState={courseState} />
+      <Curriculum
+        isLoading={isLoading}
+        locked={isLocked}
+        courseState={courseState}
+      />
       {/*------ LECTURES ENDS ------*/}
       {/* MODAL STARTS */}
       <Modal />
