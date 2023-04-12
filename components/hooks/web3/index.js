@@ -16,6 +16,7 @@ const enhanceHooks = (swrRes) => {
   const { data, error } = swrRes;
   const hasInitialResponse = !!(data || error);
   //initial response is received but data is empty or not
+  //if hasInitialResponse is false, it will be false
   const isEmpty = hasInitialResponse && _isEmpty(data);
   return {
     ...swrRes,

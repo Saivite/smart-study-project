@@ -18,7 +18,13 @@ export const handler = (web3, provider) => () => {
     async () => {
       //callback function
       const accounts = await web3.eth.getAccounts();
-      return accounts[0];
+      //return account or error if there is no account
+      //always check for data
+      const account = accounts[0];
+      if (!account) {
+        throw new Error("Cannot retrieve account. Please refresh the browser.");
+      }
+      return account;
       // return "Hello World";
     }
   );
