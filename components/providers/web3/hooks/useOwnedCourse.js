@@ -8,18 +8,8 @@ export const handler = (web3, contract) => (course, account) => {
     () => (web3 && account && contract ? `web3/ownedCourse/${account}` : null),
     async () => {
       //construct course hash and retrieve it from blockchain
-      const hexCourseId = web3.utils.utf8ToHex(course.id);
 
-      const courseHash = web3.utils.soliditySha3(
-        {
-          type: "bytes16",
-          value: hexCourseId,
-        },
-        {
-          type: "address",
-          value: account,
-        }
-      );
+      const courseHash = createCourseHash(web3)(course.id, account);
       //whenever calling a function - call
       //when sending a tx - send
       const ownedCourse = await contract.methods

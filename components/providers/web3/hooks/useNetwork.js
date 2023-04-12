@@ -20,6 +20,11 @@ export const handler = (web3, provider) => () => {
     //if data and error is undefined then below function isn't resolved
     async () => {
       const chainId = await web3.eth.getChainId();
+      if (!chainId) {
+        throw new Error(
+          "Cannot retrieve an account. Please refresh the browser."
+        );
+      }
       return NETWORKS[chainId];
     }
   );
