@@ -38,7 +38,7 @@ export default function Course({ course }) {
               <i className="block font-normal">
                 In case of any questions, please contact:
               </i>
-              <Link href="">saivite@outlook.in</Link>
+              <a href="mailto:saivite@outlook.in">saivite@outlook.in</a>
             </Message>
           )}
           {courseState === "Activated" && (
@@ -47,7 +47,7 @@ export default function Course({ course }) {
               <i className="block font-normal">
                 In case of any questions, please contact:
               </i>
-              <Link href="/mail-to:saivite@outlook.in">saivite@outlook.in</Link>
+              <a href="mailto:saivite@outlook.in">saivite@outlook.in</a>
             </Message>
           )}
           {courseState === "Deactivated" && (

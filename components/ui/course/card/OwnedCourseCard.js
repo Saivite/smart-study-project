@@ -25,7 +25,9 @@ export default function OwnedCourseCard({ children, course }) {
             <h3 className="text-lg  leading-6 font-medium text-gray-900">
               <span className="mr-2">{course.title}</span>
               <span
-                className={`text-xs text-${stateColor}-700 bg-${stateColor}-200 rounded-full p-2`}
+                className={`text-xs rounded-full text-${
+                  stateColor != null && stateColor
+                }-700 bg-${stateColor != null && stateColor}-200 p-2`}
               >
                 {course.state}
               </span>
