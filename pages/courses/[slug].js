@@ -1,15 +1,18 @@
 //each course page is rendered by slug
 import { useAccount, useOwnedCourse } from "@components/hooks/web3";
-import { Message, Modal } from "@components/ui/common";
+import { Button, Message, Modal } from "@components/ui/common";
 import { CourseHero, Curriculum, Keypoints } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { getAllCourses } from "@content/courses/fetcher";
+import Link from "next/link";
 
 export default function Course({ course }) {
   const { account } = useAccount();
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const courseState = ownedCourse.data != null && ownedCourse.data.state;
   // const courseState = "Activated";
+
+  const isLocked = courseState == "Purchased" || courseState == "Deactivated";
 
   return (
     <>
@@ -33,16 +36,18 @@ export default function Course({ course }) {
               Thank You for Purchasing the Course. Your learning is in the
               process of activation. Process can take up to 24 hours.
               <i className="block font-normal">
-                In case of any questions, please contact: saivite@outlook.in
+                In case of any questions, please contact:
               </i>
+              <Link href="">saivite@outlook.in</Link>
             </Message>
           )}
           {courseState === "Activated" && (
             <Message type="success">
               Instructor wishes you happy learning.
               <i className="block font-normal">
-                In case of any questions, please contact: saivite@outlook.in
+                In case of any questions, please contact:
               </i>
+              <Link href="/mail-to:saivite@outlook.in">saivite@outlook.in</Link>
             </Message>
           )}
           {courseState === "Deactivated" && (
@@ -58,7 +63,7 @@ export default function Course({ course }) {
       )}
       {/*------ KEYPOINT ENDS ------*/}
       {/*------ LECTURES STARTS ------*/}
-      <Curriculum locked={true} />
+      <Curriculum locked={isLocked} courseState={courseState} />
       {/*------ LECTURES ENDS ------*/}
       {/* MODAL STARTS */}
       <Modal />

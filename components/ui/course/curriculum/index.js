@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const lectures = [
   "How to init App",
   "How to get a help",
@@ -7,7 +9,7 @@ const lectures = [
   "Safe operator",
 ];
 
-export default function Curriculum({ locked }) {
+export default function Curriculum({ locked, courseState }) {
   const statusClass =
     "px-2 inline-flex text-xs leading-5 font-semibold rounded-full";
 
@@ -61,12 +63,33 @@ export default function Curriculum({ locked }) {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          {locked ? "Get Access" : "Play"}
-                        </a>
+                        {locked ? (
+                          <>
+                            {courseState === "Deactivated" && (
+                              <Link
+                                href="/marketplace"
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                Get Access
+                              </Link>
+                            )}
+                            {courseState === "Purchased" && (
+                              <Link
+                                href="/faq"
+                                className="text-yellow-800 hover:text-yellow-900"
+                              >
+                                Waiting for Activation
+                              </Link>
+                            )}
+                          </>
+                        ) : (
+                          <Link
+                            href="/watch"
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Watch
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   ))}
