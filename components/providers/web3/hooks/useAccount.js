@@ -31,21 +31,30 @@ export const handler = (web3, provider) => () => {
 
   // swrResponse.data; //Hello world
 
-  useEffect(() => {
-    window.ethereum &&
-      window.ethereum.on("accountsChanged", (accounts) => {
-        mutate(accounts[0] ?? null);
-      });
-  }, []);
+  // useEffect(() => {
+  //   window.ethereum &&
+  //     window.ethereum.on("accountsChanged", (accounts) => {
+  //       mutate(accounts[0] ?? null);
+  //     });
+  // }, []);
 
   useEffect(() => {
     //You can also setup using provider
+    console.log("SUBSCRIBING TO EVENTS");
+    //we're subscribing to event every time we visit any page and we are calling funtion many times which is not very performant
+    const mutator = (accounts) => mutate(accounts[0] ?? null);
+
     provider &&
       provider.on(
         "accountsChanged",
         //useSwr will return the data of mutate to here
-        (accounts) => mutate(accounts[0] ?? null)
+        mutator
       );
+    console.log(provider);
+    return () => {
+      //whenever hook function navigates to new page, it will remove the listener
+      provider && provider.removeListener("accountsChanged", mutator);
+    };
   }, [provider]);
 
   return {

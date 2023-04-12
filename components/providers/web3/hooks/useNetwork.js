@@ -30,9 +30,22 @@ export const handler = (web3, provider) => () => {
   );
 
   useEffect(() => {
+    //You can also setup using provider
+    console.log("SUBSCRIBING TO EVENTS");
+    //we're subscribing to event every time we visit any page and we are calling funtion many times which is not very performant
+    const mutator = (chainId) => mutate(parseInt(chainId, 16));
+
     provider &&
-      provider.on("chainChanged", (chainId) => mutate(parseInt(chainId, 16)));
-  }, [web3]);
+      provider.on(
+        "chainChanged",
+        //useSwr will return the data of mutate to here
+        mutator
+      );
+    return () => {
+      //whenever hook function navigates to new page, it will remove the listener
+      provider && provider.removeListener("chainChanged", mutator);
+    };
+  }, [provider]);
 
   return {
     data,
