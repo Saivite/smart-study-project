@@ -16,20 +16,16 @@ export default function OwnedCourses({ courses }) {
     <>
       <MarketHeader />
       <section className="grid grid-cols-1">
-        {ownedCourses.hasInitialResponse &&
-          (!ownedCourses.data || ownedCourses.data.length === 0) && (
-            <div className="w-1/2">
-              <Message type="warn">
-                <div>You dont own any courses</div>
-                <Link
-                  className="font-normal hover:underline"
-                  href="/marketplace"
-                >
-                  <i>Purchase Course</i>
-                </Link>
-              </Message>
-            </div>
-          )}
+        {ownedCourses.isEmpty && (
+          <div className="w-1/2">
+            <Message type="warn">
+              <div>You dont own any courses</div>
+              <Link className="font-normal hover:underline" href="/marketplace">
+                <i>Purchase Course</i>
+              </Link>
+            </Message>
+          </div>
+        )}
         {ownedCourses.data &&
           ownedCourses.data.map((course) => (
             //we need to pass key as we're iterating
