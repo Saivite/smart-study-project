@@ -32,10 +32,17 @@ contract CourseMarketplace {
     //contract owner address (like an admin)
     address payable private owner;
 
-    ///Only Owner has access
+    ///Course has already a owner
     error CourseHasOwner();
 
+    ///Only Owner has access
     error OnlyOwner();
+
+    /// Course has invalid state
+    error InvalidState();
+
+    /// Course doesn't exist
+    error CourseIsNotCreated();
 
     //modifiers
     modifier onlyOwner(){
@@ -81,6 +88,22 @@ contract CourseMarketplace {
         });
     }
 
+    function activateCourse(bytes32 courseHash) external onlyOwner {
+
+        if(!isCourseCreated(courseHash)){
+            revert CourseIsNotCreated();
+        }
+        //whenever we use storage, we can manipulate data
+        //it will also change the data, in memory it will not happen
+        Course storage course = ownedCourses[courseHash];
+        //In order to activate course should exist and it should be purchased
+        if(course.state != State.Purchased){
+            revert InvalidState();
+        }
+
+        course.state = State.Activated;
+    }
+
 
     function transferOwnership(address newOwner) external onlyOwner { 
         setContractOwner(newOwner);
@@ -112,5 +135,9 @@ contract CourseMarketplace {
     //helper function
     function hasCourseOwnership(bytes32 courseHash) private view returns (bool) {
         return ownedCourses[courseHash].owner == msg.sender;
+    }
+
+    function isCourseCreated(bytes32 courseHash) private view returns (bool) {
+        return ownedCourses[courseHash].owner != 0x0000000000000000000000000000000000000000; 
     }
 }
