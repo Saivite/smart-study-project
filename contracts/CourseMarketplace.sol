@@ -105,6 +105,27 @@ contract CourseMarketplace {
     }
 
 
+        function deactivateCourse(bytes32 courseHash) external onlyOwner {
+
+        if(!isCourseCreated(courseHash)){
+            revert CourseIsNotCreated();
+        }
+        //whenever we use storage, we can manipulate data
+        //it will also change the data, in memory it will not happen
+        Course storage course = ownedCourses[courseHash];
+        //In order to activate course should exist and it should be purchased
+        if(course.state != State.Purchased){
+            revert InvalidState();
+        } 
+
+        //if price has miscrepancy, we can send back the money/ eth to the user
+        (bool success,  ) = course.owner.call{value: course.price}("");
+        require(success, "Transfer failed");
+        course.state = State.Deactivated;
+        course.price = 0;
+    }
+
+
     function transferOwnership(address newOwner) external onlyOwner { 
         setContractOwner(newOwner);
     }
