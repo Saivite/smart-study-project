@@ -39,6 +39,15 @@ contract("CourseMarketplace", (accounts) => {
       });
     });
 
+    it("should not allow to repurchase the already owned course", async () => {
+      await catchRevert(
+        _contract.purchaseCourse(courseId, proof, {
+          from: buyer,
+          value,
+        })
+      );
+    });
+
     //test 1 - if we purchase the course, we'll be able to readi it by index
     it("can get purchased course hash by index", async () => {
       const index = 0;
