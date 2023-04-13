@@ -7,11 +7,18 @@ import {
 } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
+import { useState } from "react";
 
 export default function ManagedCourses() {
+  const [email, setEmail] = useState("");
   const { account } = useAccount();
   const { managedCourses } = useManagedCourses(account.data);
-  console.log(managedCourses.data);
+
+  const verifyCourse = (email, { hash, proof }) => {
+    console.log(email);
+    console.log(hash);
+    console.log(proof);
+  };
 
   return (
     <>
@@ -23,13 +30,25 @@ export default function ManagedCourses() {
             {" "}
             <div className="flex mr-2 relative rounded-md">
               <input
+                value={email}
+                //this will give email to the state
+                onChange={({ target: { value } }) => setEmail(value)}
                 type="text"
                 name="account"
                 id="account"
                 className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 pl-7 p-4 sm:text-sm border-gray-300 rounded-md "
                 placeholder="0x2341ab..."
               />
-              <Button>Verify</Button>
+              <Button
+                onClick={() => {
+                  verifyCourse(email, {
+                    hash: course.hash,
+                    proof: course.proof,
+                  });
+                }}
+              >
+                Verify
+              </Button>
             </div>
           </ManagedCourseCard>
         ))}

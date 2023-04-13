@@ -12,7 +12,7 @@ export default function Header(params) {
       value: "My Courses",
     },
     {
-      href: "/marketplace/courses/manage",
+      href: "/marketplace/courses/managed",
       value: "Manage Courses",
     },
   ];

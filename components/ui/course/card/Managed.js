@@ -22,7 +22,6 @@ export default function ManagedCourseCard({ children, course }) {
               value={course[key]}
             />
           ))}
-
           <div className="bg-white px-4 py-5 sm:px-6">{children}</div>
         </div>
       </div>
