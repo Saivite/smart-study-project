@@ -1,5 +1,6 @@
 //get smartcontract
 const CourseMarketplace = artifacts.require("CourseMarketplace");
+const { catchRevert } = require("./utils/exceptions");
 
 //Internally truffle is using Mocha - testing framework
 // and Chai - Assertion JS library
@@ -79,6 +80,17 @@ contract("CourseMarketplace", (accounts) => {
   describe("Activate the purchased course", () => {
     before(async () => {
       await _contract.activateCourse(courseHash, { from: contractOwner });
+    });
+
+    //test for activating course by not contract owner
+    //when we get error then test should pass
+    it("course CAN'T be activated by people other than contract owner", async () => {
+      //   try {
+      //     await _contract.activateCourse(courseHash, { from: buyer });
+      //   } catch (error) {
+      //     //one property of error object is message
+      //     assert(error, "Expected an error but didn't get one!");
+      await catchRevert(_contract.activateCourse(courseHash, { from: buyer }));
     });
 
     it("should have activated status", async () => {
