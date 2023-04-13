@@ -1,4 +1,7 @@
 import { useHooks } from "@components/providers/web3";
+import { useEffect } from "react";
+import { useWeb3 } from "@components/providers/";
+import { useRouter } from "next/router";
 
 const _isEmpty = (data) => {
   //to check if data is empty
@@ -41,6 +44,25 @@ export const useAccount = () => {
       account: swrRes,
     };
   });
+};
+
+export const useAdmin = ({ redirectTo }) => {
+  const { account } = useAccount();
+  const { requireInstall } = useWeb3();
+  const router = useRouter();
+  useEffect(() => {
+    //functionality to check account
+    //reexecuting the function when we change account
+    if (
+      //requireInstall checks if we have metamask or not
+      requireInstall ||
+      (account.hasInitialResponse && !account.isAdmin) ||
+      account.isEmpty
+    ) {
+      router.push(redirectTo);
+    }
+  }, [account]);
+  return { account };
 };
 
 export const useOwnedCourses = (...args) => {
