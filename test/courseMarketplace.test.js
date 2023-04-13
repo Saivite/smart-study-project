@@ -17,6 +17,7 @@ contract("CourseMarketplace", (accounts) => {
   let _contract = null;
   let contractOwner = null;
   let buyer = null;
+  let courseHash = null;
 
   before(async () => {
     //deploy contract here
@@ -29,7 +30,6 @@ contract("CourseMarketplace", (accounts) => {
 
   //describe groups multiple tests
   describe("Purchasing a new course", () => {
-    let courseHash;
     before(async () => {
       //here we are working with abstraction of truffle so we dont need to write contract.methods... like in web3
       await _contract.purchaseCourse(courseId, proof, {
@@ -72,6 +72,23 @@ contract("CourseMarketplace", (accounts) => {
         course.state,
         expectedState,
         `Course state should be ${expectedState}!`
+      );
+    });
+  });
+
+  describe("Activate the purchased course", () => {
+    before(async () => {
+      await _contract.activateCourse(courseHash, { from: contractOwner });
+    });
+
+    it("should have activated status", async () => {
+      const course = await _contract.getCourseByHash(courseHash);
+      const expectedState = 1;
+
+      assert.equal(
+        course.state,
+        expectedState,
+        "Course should have 'activated' state"
       );
     });
   });
