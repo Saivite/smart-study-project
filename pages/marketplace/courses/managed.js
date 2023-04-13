@@ -38,7 +38,7 @@ const VerificationInput = ({ onVerify }) => {
 export default function ManagedCourses() {
   const [proofOwnership, setProofOwnership] = useState({});
   const { account } = useAccount();
-  const { managedCourses } = useManagedCourses(account.data);
+  const { managedCourses } = useManagedCourses(account);
   const { web3 } = useWeb3();
 
   const verifyCourse = (email, { hash, proof }) => {
@@ -56,12 +56,12 @@ export default function ManagedCourses() {
     );
     proofToCheck == proof
       ? setProofOwnership({
-        //to keep the previous states of courses verified or not 
-        ...proofOwnership
+          //to keep the previous states of courses verified or not
+          ...proofOwnership,
           [hash]: true,
         })
       : setProofOwnership({
-        ...proofOwnership
+          ...proofOwnership,
           [hash]: false,
         });
   };

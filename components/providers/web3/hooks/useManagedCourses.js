@@ -6,7 +6,9 @@ export const handler = (web3, contract) => (account) => {
   const swrRes = useSWR(
     //as account will change useSWR will refetch data
     () =>
-      web3 && account && contract ? `web3/managedCourses/${account}` : null,
+      web3 && account.data && contract && account.isAdmin
+        ? `web3/managedCourses/${account.data}`
+        : null,
     async () => {
       const courses = [];
       //get all the count of courses
