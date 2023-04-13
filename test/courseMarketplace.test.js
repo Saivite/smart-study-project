@@ -104,4 +104,46 @@ contract("CourseMarketplace", (accounts) => {
       );
     });
   });
+
+  describe("Transfer Ownership", () => {
+    let currentOwner = null;
+    before(async () => {
+      currentOwner = await _contract.getContractOwner();
+    });
+
+    //test for activating course by not contract owner
+    //when we get error then test should pass
+    it("getContractOwner should return deployer address", async () => {
+      //contractOwner = deployer
+      assert.equal(
+        contractOwner,
+        currentOwner,
+        "Contract owner is not matching one from getCurrentOwner function i.e currentOwner"
+      );
+    });
+    it("should not transfer ownership when contractOwner is not sending transaction", async () => {
+      //account 3 from account 4 but 4 is not owner
+      await catchRevert(
+        _contract.transferOwnership(accounts[3], { from: accounts[4] })
+      );
+    });
+
+    it("should transfer ownership to 3rd address from accounts", async () => {
+      //account 3 from account 4 but 4 is not owner
+      await _contract.transferOwnership(accounts[2], { from: contractOwner });
+      const owner = await _contract.getContractOwner();
+      assert.equal(
+        owner,
+        accounts[2],
+        "Contract Owner is not the second account"
+      );
+    });
+
+    it("should transfer ownership to back to inital contract owner", async () => {
+      //account 3 from account 4 but 4 is not owner
+      _contract.transferOwnership(contractOwner, { from: accounts[2] });
+      const owner = await _contract.getContractOwner();
+      assert.equal(owner, accounts[2], "Contract Owner is not set");
+    });
+  });
 });
