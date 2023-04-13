@@ -92,7 +92,7 @@ contract CourseMarketplace {
 
     //it required index as parameter
 
-    function getCourseHashIndex(uint index) external view returns (bytes32) {
+    function getCourseHashAtIndex(uint index) external view returns (bytes32) {
         return ownedCourseHash[index];
     }
 
