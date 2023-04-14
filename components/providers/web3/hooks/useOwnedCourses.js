@@ -39,5 +39,14 @@ export const handler = (web3, contract) => (courses, account) => {
       return ownedCourses;
     }
   );
-  return swrRes;
+  return {
+    ...swrRes,
+    //in reduce 2nd is initial object
+    //a is accmualator which is empty object
+    lookup:
+      swrRes.data?.reduce((a, c, i) => {
+        a[c.id] = c;
+        return a;
+      }, {}) ?? {}, //if data is not present then empty object will be default value in lookup
+  };
 };

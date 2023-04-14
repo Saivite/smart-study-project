@@ -1,7 +1,11 @@
 import { CourseCard, CourseList } from "@components/ui/course";
 import { getAllCourses } from "@content/courses/fetcher";
 import { BaseLayout } from "@components/ui/layout";
-import { useAccount, useWalletInfo } from "@components/hooks/web3";
+import {
+  useAccount,
+  useOwnedCourses,
+  useWalletInfo,
+} from "@components/hooks/web3";
 import { Button, Loader } from "@components/ui/common";
 import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
@@ -11,6 +15,9 @@ import { useWeb3 } from "@components/providers";
 export default function Marketplace({ courses }) {
   const { account, network, hasConnectedWallet, isConnecting } =
     useWalletInfo();
+  //for showing different button if course is already purchased
+  const { ownedCourses } = useOwnedCourses(courses, account.data);
+
   const [selectedCourse, setSelectedCourse] = useState(null);
   const { web3, contract, requireInstall } = useWeb3();
 
@@ -87,6 +94,28 @@ export default function Marketplace({ courses }) {
                   </div>
                 );
               }
+
+              if (!ownedCourses.hasInitialResponse) {
+                return (
+                  <div className="mt-4">
+                    <Button disabled={true} variant="lightPurple">
+                      Loading State
+                    </Button>
+                  </div>
+                );
+              }
+
+              const owned = ownedCourses.lookup[course.id];
+              if (owned) {
+                return (
+                  <div className="mt-4">
+                    <Button disabled={true} variant="green">
+                      Owned
+                    </Button>
+                  </div>
+                );
+              }
+
               return (
                 <div className="mt-4">
                   <Button
