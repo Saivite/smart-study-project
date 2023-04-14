@@ -214,7 +214,29 @@ contract("CourseMarketplace", (accounts) => {
     });
 
     it("should be able repurchase with the original buyer", async () => {
-      await _contract.repurchaseCourse(courseHash2, { from: buyer, value });
+      //before Tx Buyer Balance
+      const beforeTxBuyerBalance = await web3.eth.getBalance(buyer);
+      //on every transaction, we're getting some result back
+      const result = await _contract.repurchaseCourse(courseHash2, {
+        from: buyer,
+        value,
+      });
+
+      //this gives some additional info about tx
+      const tx = await web3.eth.getTransaction(result.tx);
+
+      //after Tx Buyer Balance
+      const afterTxBuyerBalance = await web3.eth.getBalance(buyer);
+
+      const gasUsed = web3.utils.BN(result.receipt.gasUsed);
+      //gasUsed * gasPrice = gas
+      const gasPrice = web3.utils.BN(tx.gasPrice);
+      const gas = gasPrice.mul(gasUsed);
+
+      //after Tx , balance will be lesser as compared to before Tx balance
+      console.log(beforeTxBuyerBalance);
+      console.log(afterTxBuyerBalance);
+
       const course = await _contract.getCourseByHash(courseHash2);
       const exptectedState = 0;
 
@@ -227,6 +249,17 @@ contract("CourseMarketplace", (accounts) => {
         course.price,
         value,
         `The course price is not equal to ${value}`
+      );
+      assert.equal(
+        //while working with eth, it is essential to wrap Number in BN
+        //it allows us to call additional functions like sub
+        web3.utils
+          .BN(beforeTxBuyerBalance)
+          .sub(web3.utils.toBN(value))
+          .sub(gas)
+          .toString(),
+        afterTxBuyerBalance,
+        "Client balance is not correct!"
       );
     });
 
