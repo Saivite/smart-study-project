@@ -17,6 +17,8 @@ export default function Marketplace({ courses }) {
   const { ownedCourses } = useOwnedCourses(courses, account.data);
 
   const [selectedCourse, setSelectedCourse] = useState(null);
+  //by default we'll purchase new course
+  const [isNewPurchase, setIsNewPurchase] = useState(true);
   const { web3, contract, requireInstall } = useWeb3();
 
   const purchaseCourse = async (order) => {
@@ -38,21 +40,45 @@ export default function Marketplace({ courses }) {
       { type: "address", value: account.data }
     );
 
-    const emailHash = web3.utils.sha3(order.email);
-
-    const proof = web3.utils.soliditySha3(
-      { type: "bytes32", value: emailHash },
-      { type: "bytes32", value: orderHash }
-    );
-
     const value = web3.utils.toWei(String(order.price));
 
+    if (isNewPurchase) {
+      //email and proof will be created only on new purchase
+      const emailHash = web3.utils.sha3(order.email);
+
+      const proof = web3.utils.soliditySha3(
+        { type: "bytes32", value: emailHash },
+        { type: "bytes32", value: orderHash }
+      );
+
+      _purchaseCourse(hexCourseId, proof, value);
+    } else {
+      _repurchaseCourse(orderHash, value);
+    }
+  };
+
+  const _purchaseCourse = async (hexCourseId, proof, value) => {
     try {
       const result = await contract.methods
         .purchaseCourse(
           //order id, proof
           hexCourseId,
           proof
+          //specify from which account we're sending
+        )
+        .send({ from: account.data, value });
+      console.log(result);
+    } catch (error) {
+      console.error("Purchase Course: Operation has failed. ");
+    }
+  };
+
+  const _repurchaseCourse = async (courseHash, value) => {
+    try {
+      const result = await contract.methods
+        .repurchaseCourse(
+          //order id, proof
+          courseHash
           //specify from which account we're sending
         )
         .send({ from: account.data, value });
@@ -114,7 +140,10 @@ export default function Marketplace({ courses }) {
                           <Button
                             size="sm"
                             disabled={false}
-                            onClick={() => alert("Reactivating")}
+                            onClick={() => {
+                              setIsNewPurchase(false);
+                              setSelectedCourse(course);
+                            }}
                             variant="black"
                           >
                             Reactivate
@@ -166,9 +195,14 @@ export default function Marketplace({ courses }) {
       </CourseList>
       {selectedCourse && (
         <OrderModal
+          course={selectedCourse}
+          isNewPurchase={isNewPurchase}
           onSubmit={purchaseCourse}
           course={selectedCourse}
-          onClose={() => setSelectedCourse(null)}
+          onClose={() => {
+            setSelectedCourse(null);
+            setIsNewPurchase(true);
+          }}
         />
       )}
     </>
