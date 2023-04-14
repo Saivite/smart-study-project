@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const STATE_COLORS = {
+export const STATE_COLORS = {
   Purchased: "indigo",
   Activated: "green",
   Deactivated: "red",

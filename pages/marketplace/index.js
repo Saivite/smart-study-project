@@ -11,6 +11,7 @@ import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
 import { MarketHeader } from "@components/ui/marketplace";
 import { useWeb3 } from "@components/providers";
+import { STATE_COLORS } from "@components/ui/course/card/OwnedCourseCard";
 
 export default function Marketplace({ courses }) {
   const { account, network, hasConnectedWallet, isConnecting } =
@@ -78,11 +79,9 @@ export default function Marketplace({ courses }) {
             Footer={() => {
               if (requireInstall) {
                 return (
-                  <div className="mt-4">
-                    <Button disabled={true} variant="lightPurple">
-                      Install
-                    </Button>
-                  </div>
+                  <Button disabled={true} variant="lightPurple">
+                    Install
+                  </Button>
                 );
               }
               if (isConnecting) {
@@ -107,12 +106,43 @@ export default function Marketplace({ courses }) {
 
               const owned = ownedCourses.lookup[course.id];
               if (owned) {
+                const stateColor = STATE_COLORS[owned.state];
+
                 return (
-                  <div className="mt-4">
-                    <Button disabled={true} variant="green">
-                      Owned
-                    </Button>
-                  </div>
+                  <>
+                    <div className="mt-4 mb-2">
+                      <Button disabled={true} variant="green">
+                        Owned
+                      </Button>
+                    </div>
+                    {owned.state == "Purchased" && (
+                      <span
+                        className={`text-xs rounded-full text-${
+                          stateColor != null && stateColor
+                        }-700 bg-${stateColor != null && stateColor}-200 p-2`}
+                      >
+                        {owned.state}
+                      </span>
+                    )}
+                    {owned.state == "Activated" && (
+                      <span
+                        className={`text-xs rounded-full text-${
+                          stateColor != null && stateColor
+                        }-700 bg-${stateColor != null && stateColor}-200 p-2`}
+                      >
+                        {owned.state}
+                      </span>
+                    )}
+                    {owned.state == "Deactivated" && (
+                      <span
+                        className={`text-xs rounded-full text-${
+                          stateColor != null && stateColor
+                        }-700 bg-${stateColor != null && stateColor}-200 p-2`}
+                      >
+                        {owned.state}
+                      </span>
+                    )}
+                  </>
                 );
               }
 
