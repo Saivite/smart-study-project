@@ -5,6 +5,20 @@ const { catchRevert } = require("./utils/exceptions");
 //Internally truffle is using Mocha - testing framework
 // and Chai - Assertion JS library
 
+//Helper function
+
+const getGas = async (result) => {
+  //this gives some additional info about tx
+  const tx = await web3.eth.getTransaction(result.tx);
+
+  const gasUsed = web3.utils.BN(result.receipt.gasUsed);
+  //gasUsed * gasPrice = gas
+  const gasPrice = web3.utils.BN(tx.gasPrice);
+  const gas = gasPrice.mul(gasUsed);
+
+  return gas;
+};
+
 //it will return all accounts from ganache
 contract("CourseMarketplace", (accounts) => {
   const courseId = "0x00000000000000000000000000003130";
@@ -222,16 +236,10 @@ contract("CourseMarketplace", (accounts) => {
         value,
       });
 
-      //this gives some additional info about tx
-      const tx = await web3.eth.getTransaction(result.tx);
-
       //after Tx Buyer Balance
       const afterTxBuyerBalance = await web3.eth.getBalance(buyer);
 
-      const gasUsed = web3.utils.BN(result.receipt.gasUsed);
-      //gasUsed * gasPrice = gas
-      const gasPrice = web3.utils.BN(tx.gasPrice);
-      const gas = gasPrice.mul(gasUsed);
+      const gas = await getGas(result);
 
       //after Tx , balance will be lesser as compared to before Tx balance
       console.log(beforeTxBuyerBalance);
