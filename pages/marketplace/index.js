@@ -14,8 +14,7 @@ import { useWeb3 } from "@components/providers";
 import { STATE_COLORS } from "@components/ui/course/card/OwnedCourseCard";
 
 export default function Marketplace({ courses }) {
-  const { account, network, hasConnectedWallet, isConnecting } =
-    useWalletInfo();
+  const { account, hasConnectedWallet, isConnecting } = useWalletInfo();
   //for showing different button if course is already purchased
   const { ownedCourses } = useOwnedCourses(courses, account.data);
 

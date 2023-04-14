@@ -33,7 +33,7 @@ export const handler = (web3, provider) => () => {
     //You can also setup using provider
     console.log("SUBSCRIBING TO EVENTS");
     //we're subscribing to event every time we visit any page and we are calling funtion many times which is not very performant
-    const mutator = (chainId) => mutate(parseInt(chainId, 16));
+    const mutator = (chainId) => window.location.reload();
 
     provider &&
       provider.on(
