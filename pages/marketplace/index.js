@@ -11,8 +11,6 @@ import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
 import { MarketHeader } from "@components/ui/marketplace";
 import { useWeb3 } from "@components/providers";
-import { STATE_COLORS } from "@components/ui/course/card/OwnedCourseCard";
-
 export default function Marketplace({ courses }) {
   const { account, hasConnectedWallet, isConnecting } = useWalletInfo();
   //for showing different button if course is already purchased
@@ -78,7 +76,7 @@ export default function Marketplace({ courses }) {
             Footer={() => {
               if (requireInstall) {
                 return (
-                  <Button disabled={true} variant="lightPurple">
+                  <Button size="sm" disabled={true} variant="lightPurple">
                     Install
                   </Button>
                 );
@@ -86,7 +84,7 @@ export default function Marketplace({ courses }) {
               if (isConnecting) {
                 return (
                   <div className="mt-4">
-                    <Button disabled={true} variant="lightPurple">
+                    <Button size="sm" disabled={true} variant="lightPurple">
                       <Loader size="sm" />
                     </Button>
                   </div>
@@ -96,7 +94,7 @@ export default function Marketplace({ courses }) {
               if (!ownedCourses.hasInitialResponse) {
                 return (
                   <div className="mt-4">
-                    <Button disabled={true} variant="lightPurple">
+                    <Button size="sm" disabled={true} variant="lightPurple">
                       Loading State
                     </Button>
                   </div>
@@ -105,16 +103,15 @@ export default function Marketplace({ courses }) {
 
               const owned = ownedCourses.lookup[course.id];
               if (owned) {
-                const stateColor = STATE_COLORS[owned.state];
-
                 return (
                   <>
                     <div className="mt-4 mb-2">
-                      <Button disabled={true} variant="green">
+                      <Button size="sm" disabled={true} variant="green">
                         Owned
                       </Button>
                       {owned.state == "Deactivated" && (
                         <Button
+                          size="sm"
                           disabled={false}
                           onClick={() => alert("Reactivating")}
                           variant="purple"
@@ -125,27 +122,21 @@ export default function Marketplace({ courses }) {
                     </div>
                     {owned.state == "Purchased" && (
                       <span
-                        className={`text-xs rounded-full text-${
-                          stateColor != null && stateColor
-                        }-700 bg-${stateColor != null && stateColor}-200 p-2`}
+                        className={`text-xs rounded-full text-yellow-700 bg-yellow-200 p-2`}
                       >
-                        {owned.state}
+                        Pending
                       </span>
                     )}
                     {owned.state == "Activated" && (
                       <span
-                        className={`text-xs rounded-full text-${
-                          stateColor != null && stateColor
-                        }-700 bg-${stateColor != null && stateColor}-200 p-2`}
+                        className={`text-xs rounded-full text-green-700 bg-green-200 p-2`}
                       >
                         {owned.state}
                       </span>
                     )}
                     {owned.state == "Deactivated" && (
                       <span
-                        className={`text-xs rounded-full text-${
-                          stateColor != null && stateColor
-                        }-700 bg-${stateColor != null && stateColor}-200 p-2`}
+                        className={`text-xs rounded-full text-red-700 bg-red-200 p-2`}
                       >
                         {owned.state}
                       </span>
@@ -159,6 +150,7 @@ export default function Marketplace({ courses }) {
                   <Button
                     //this will mutate the instance and course will be received in selectedCourse variable and we can pass it as a prop to the modal
                     onClick={() => setSelectedCourse(course)}
+                    size="sm"
                     disabled={!hasConnectedWallet}
                     variant="lightPurple"
                   >

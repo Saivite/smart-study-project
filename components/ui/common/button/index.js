@@ -1,11 +1,20 @@
+const SIZE = {
+  //xs small screen , px padding x
+  sm: "p-2 text-base xs:px-4",
+  md: "p-3 text-base xs:px-8 ",
+  lg: "p-4 text-lg xs:px-10",
+};
+
 export default function Button({
   children,
   className,
+  size = "md",
   variant = "purple",
   hoverable = true,
   //onClick will be passed in rest instead of passing it as onClick={onClick}
   ...rest
 }) {
+  const sizeClass = SIZE[size];
   const variants = {
     purple: `text-white bg-indigo-600 ${hoverable && "hover:bg-indigo-700"}`,
     green: `text-white bg-green-600 ${hoverable && "hover:bg-green-700"}`,
@@ -19,7 +28,7 @@ export default function Button({
   return (
     <button
       {...rest}
-      className={`disabled:opacity-50 disabled:cursor-not-allowed xs:px-8 xs:py-3 p-2 border text-base rounded-md  font-medium ${className} ${variants[variant]}`}
+      className={`${sizeClass} disabled:opacity-50 disabled:cursor-not-allowed border  rounded-md  font-medium ${className} ${variants[variant]}`}
     >
       {children}
     </button>
