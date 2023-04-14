@@ -173,11 +173,13 @@ contract("CourseMarketplace", (accounts) => {
 
   describe("deactivate course", () => {
     let courseHash2 = null;
+    let currentOwner = null;
 
     before(async () => {
       await _contract.purchaseCourse(courseId2, proof2, { from: buyer, value });
       //This is second course, so index at 1
       courseHash2 = await _contract.getCourseHashAtIndex(1);
+      currentOwner = await _contract.getContractOwner();
     });
 
     it("should NOT be able to deactivate the course by not contract owner", async () => {
@@ -187,14 +189,68 @@ contract("CourseMarketplace", (accounts) => {
       );
     });
 
+    // it("should have status of deactivated and price 0", async () => {
+    //   //only contract owner should deactivate course
+    //   await _contract.deactivateCourse(courseHash2, { from: contractOwner });
+    //   const course = await _contract.getCourseByHash(courseHash2);
+    //   const expectedState = 2;
+    //   const expectedPrice = 0;
+    //   assert.equal(course.state, expectedState, "Course is not deactivated");
+    //   assert.equal(course.price, expectedPrice, "Course price is not 0");
+    // });
+
     it("should have status of deactivated and price 0", async () => {
+      //before Tx Buyer Balance
+      const beforeTxBuyerBalance = await web3.eth.getBalance(buyer);
+      const beforeTxContractBalance = await web3.eth.getBalance(
+        _contract.address
+      );
+      const beforeTxOwnerBalance = await web3.eth.getBalance(currentOwner);
+
+      //after Tx Buyer and contract Balance
+      const afterTxBuyerBalance = await web3.eth.getBalance(buyer);
+      const afterTxContractBalance = await web3.eth.getBalance(
+        _contract.address
+      );
+      const afterTxOwnerBalance = await web3.eth.getBalance(_contract.address);
+
       //only contract owner should deactivate course
-      await _contract.deactivateCourse(courseHash2, { from: contractOwner });
+      const result = await _contract.deactivateCourse(courseHash2, {
+        from: contractOwner,
+      });
       const course = await _contract.getCourseByHash(courseHash2);
       const expectedState = 2;
       const expectedPrice = 0;
+
+      const gas = getGas(result);
+
       assert.equal(course.state, expectedState, "Course is not deactivated");
       assert.equal(course.price, expectedPrice, "Course price is not 0");
+      //balance will be transferred to original buyer, so balance will be higher
+      assert.equal(
+        web3.utils
+          .BN(beforeTxBuyerBalance)
+          .add(web3.utils.BN(value))
+          .toString(),
+        afterTxBuyerBalance,
+        "Buyer balance is not correct"
+      );
+      //contract owner is responsible for sending tx, so we're not checking gas fees
+      //contractBalance and buyerBalance are not affected by any gas fees
+      assert.equal(
+        web3.utils
+          .BN(beforeTxContractBalance)
+          .sub(web3.utils.BN(value))
+          .toString(),
+        afterTxContractBalance,
+        "Contract balance is not correct"
+      );
+
+      assert.equal(
+        web3.utils.BN(beforeTxOwnerBalance).sub(web3.utils.BN(gas)).toString(),
+        afterTxOwnerBalance,
+        "Contract owner balance is not correct"
+      );
     });
 
     it("should NOT be able to activate the deactivated course ", async () => {
