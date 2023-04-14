@@ -23,6 +23,7 @@ export default function Button({
       hoverable && "hover:bg-indigo-200"
     }`,
     white: `text-black bg-white`,
+    black: `text-white bg-black`,
   };
 
   return (
