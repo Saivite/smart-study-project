@@ -10,8 +10,8 @@ const NETWORKS = {
 
 const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID];
 
-export const handler = (web3, provider) => () => {
-  const { data, mutate, ...rest } = useSWR(
+export const handler = (web3) => () => {
+  const { data, ...rest } = useSWR(
     () => {
       return web3 ? "web3/network" : null;
     },
@@ -29,27 +29,26 @@ export const handler = (web3, provider) => () => {
     }
   );
 
-  useEffect(() => {
-    //You can also setup using provider
-    console.log("SUBSCRIBING TO EVENTS");
-    //we're subscribing to event every time we visit any page and we are calling funtion many times which is not very performant
-    const mutator = (chainId) => window.location.reload();
+  // useEffect(() => {
+  //   //You can also setup using provider
+  //   console.log("SUBSCRIBING TO EVENTS");
+  //   //we're subscribing to event every time we visit any page and we are calling funtion many times which is not very performant
+  //   const mutator = (chainId) => window.location.reload();
 
-    provider &&
-      provider.on(
-        "chainChanged",
-        //useSwr will return the data of mutate to here
-        mutator
-      );
-    return () => {
-      //whenever hook function navigates to new page, it will remove the listener
-      provider && provider.removeListener("chainChanged", mutator);
-    };
-  }, [provider]);
+  //   provider &&
+  //     provider.on(
+  //       "chainChanged",
+  //       //useSwr will return the data of mutate to here
+  //       mutator
+  //     );
+  //   return () => {
+  //     //whenever hook function navigates to new page, it will remove the listener
+  //     provider && provider.removeListener("chainChanged", mutator);
+  //   };
+  // }, [provider]);
 
   return {
     data,
-    mutate,
     target: targetNetwork,
     isSupported: data === targetNetwork,
     ...rest,
