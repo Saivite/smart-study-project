@@ -32,8 +32,11 @@ contract CourseMarketplace {
     //contract owner address (like an admin)
     address payable private owner;
 
-    ///Course has already a owner
+    ///Sender is not course owner
     error CourseHasOwner();
+
+    ///Course has already a owner
+    error SenderIsNotCourseOwner();
 
     ///Only Owner has access
     error OnlyOwner();
@@ -86,6 +89,28 @@ contract CourseMarketplace {
             owner: msg.sender,
             state: State.Purchased
         });
+    }
+
+
+    function repurchaseCourse(bytes32 courseHash) external payable {
+        //we can repurchase the course if we are owners of the course
+        //if sender is not owner then revert
+        if(!isCourseCreated(courseHash)){
+            revert CourseIsNotCreated();
+        }
+
+        if(!hasCourseOwnership(courseHash)){ 
+            revert SenderIsNotCourseOwner();
+        }
+
+        Course storage course =  ownedCourses[courseHash];
+
+        if(course.state!=State.Deactivated){
+            revert InvalidState();
+        }
+
+        course.state = State.Purchased;
+        course.price = msg.value;
     }
 
     function activateCourse(bytes32 courseHash) external onlyOwner {
