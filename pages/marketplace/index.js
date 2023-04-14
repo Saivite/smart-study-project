@@ -2,16 +2,17 @@ import { CourseCard, CourseList } from "@components/ui/course";
 import { getAllCourses } from "@content/courses/fetcher";
 import { BaseLayout } from "@components/ui/layout";
 import { useAccount, useWalletInfo } from "@components/hooks/web3";
-import { Button } from "@components/ui/common";
+import { Button, Loader } from "@components/ui/common";
 import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
 import { MarketHeader } from "@components/ui/marketplace";
 import { useWeb3 } from "@components/providers";
 
 export default function Marketplace({ courses }) {
-  const { account, network, canPurchaseCourse } = useWalletInfo();
+  const { account, network, hasConnectedWallet, isConnecting } =
+    useWalletInfo();
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const { web3, contract } = useWeb3();
+  const { web3, contract, requireInstall } = useWeb3();
 
   const purchaseCourse = async (order) => {
     //course in hexa decimal
@@ -66,19 +67,39 @@ export default function Marketplace({ courses }) {
           <CourseCard
             key={course.id}
             course={course}
-            disabled={!canPurchaseCourse}
-            Footer={() => (
-              <div className="mt-4">
-                <Button
-                  //this will mutate the instance and course will be received in selectedCourse variable and we can pass it as a prop to the modal
-                  onClick={() => setSelectedCourse(course)}
-                  disabled={!canPurchaseCourse}
-                  variant="lightPurple"
-                >
-                  Purchase
-                </Button>
-              </div>
-            )}
+            disabled={!hasConnectedWallet}
+            Footer={() => {
+              if (requireInstall) {
+                return (
+                  <div className="mt-4">
+                    <Button disabled={true} variant="lightPurple">
+                      Install
+                    </Button>
+                  </div>
+                );
+              }
+              if (isConnecting) {
+                return (
+                  <div className="mt-4">
+                    <Button disabled={true} variant="lightPurple">
+                      <Loader size="sm" />
+                    </Button>
+                  </div>
+                );
+              }
+              return (
+                <div className="mt-4">
+                  <Button
+                    //this will mutate the instance and course will be received in selectedCourse variable and we can pass it as a prop to the modal
+                    onClick={() => setSelectedCourse(course)}
+                    disabled={!hasConnectedWallet}
+                    variant="lightPurple"
+                  >
+                    Purchase
+                  </Button>
+                </div>
+              );
+            }}
           />
         )}
       </CourseList>
