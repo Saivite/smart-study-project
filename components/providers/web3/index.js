@@ -15,7 +15,7 @@ const Web3Context = createContext(null);
 
 //Helper functions
 const setListeners = (provider) => {
-  provider.on("chainChanged",_() => window.location.reload());
+  provider.on("chainChanged", () => window.location.reload());
 };
 
 const createWeb3State = ({ web3, provider, contract, isLoading }) => {
