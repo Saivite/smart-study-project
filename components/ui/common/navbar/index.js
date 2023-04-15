@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ActiveLink, Button } from "@components/ui/common";
 import { useAccount } from "@components/hooks/web3/";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function Navbar() {
   const { connect, isLoading, requireInstall } = useWeb3();
@@ -20,9 +21,15 @@ export default function Navbar() {
             <div>
               <ActiveLink
                 href="/"
-                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
+                className=" text-xl font-bold mr-8 text-gray-500 hover:text-gray-900"
               >
-                Home
+                <Image
+                  src="/ss-seeklogo.com.png"
+                  height="50"
+                  width="50"
+                  layout="fit"
+                />
+                SmartStudy
               </ActiveLink>
               <ActiveLink
                 href="/marketplace "
@@ -30,21 +37,8 @@ export default function Navbar() {
               >
                 Marketplace
               </ActiveLink>
-              <ActiveLink
-                href="/blogs"
-                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-              >
-                Blogs
-              </ActiveLink>
             </div>
             <div className="text-center">
-              <ActiveLink
-                href="/wishlist"
-                className="font-medium mr-2 text-gray-500 hover:text-gray-900"
-              >
-                Wishlist
-              </ActiveLink>
-
               {isLoading ? (
                 <Button disabled={true} onClick={connect}>
                   Loading...

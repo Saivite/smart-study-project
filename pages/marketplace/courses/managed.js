@@ -42,6 +42,9 @@ export default function ManagedCourses() {
   const { web3, contract } = useWeb3();
 
   const verifyCourse = (email, { hash, proof }) => {
+    if (!email) {
+      return;
+    }
     //email + hash(courseHash) = Proof
     const emailHash = web3.utils.sha3(email);
     const proofToCheck = web3.utils.soliditySha3(
