@@ -8,7 +8,7 @@ export default function CourseFilter({ onSearchSubmit }) {
     <div className="flex flex-col md:flex-row items-center my-4">
       <div className="flex mr-2 relative rounded-md">
         <input
-          onChange={({ target: { value } }) => setSearchText()}
+          onChange={({ target: { value } }) => setSearchText(value)}
           first={searchText}
           type="text"
           name="courseHash"
