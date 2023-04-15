@@ -9,10 +9,18 @@ const ITEM = ({ title, value, className }) => {
   );
 };
 
-export default function ManagedCourseCard({ children, course }) {
+export default function ManagedCourseCard({
+  children,
+  isSearched = false,
+  course,
+}) {
   return (
-    <div className="bg-white border shadow overflow-hidden sm:rounded-lg mb-3">
-      <div className="border-t border-gray-200">
+    <div
+      className={`${
+        isSearched ? "border-indigo-600" : "bg-gray-200"
+      } bg-white border shadow overflow-hidden sm:rounded-lg mb-3`}
+    >
+      <div className="">
         <div>
           {Object.keys(course).map((key, i) => (
             <ITEM
