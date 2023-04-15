@@ -35,6 +35,8 @@ const VerificationInput = ({ onVerify }) => {
 export default function ManagedCourses() {
   const [proofOwnership, setProofOwnership] = useState({});
   const [searchedCourse, setSearchedCourse] = useState(null);
+  //by default initial state is all
+  const [filters, setFilters] = useState({ state: "all" });
   const { account } = useAdmin({ redirectTo: "/marketplace" });
   const { managedCourses } = useManagedCourses(account);
   const { web3, contract } = useWeb3();
@@ -141,6 +143,11 @@ export default function ManagedCourses() {
     );
   };
 
+  //to view what state you selected
+  useEffect(() => {
+    console.log(filters);
+  }, [filters]);
+
   if (!account.isAdmin) {
     return null;
   }
@@ -148,7 +155,12 @@ export default function ManagedCourses() {
   return (
     <>
       <MarketHeader />
-      <CourseFilter onSearchSubmit={searchCourse} />
+      <CourseFilter
+        onFilterSelect={(value) => {
+          setFilters({ state: value });
+        }}
+        onSearchSubmit={searchCourse}
+      />
       <section className="grid grid-cols-1">
         {searchedCourse && (
           <div>
