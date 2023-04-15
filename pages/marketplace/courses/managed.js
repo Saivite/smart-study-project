@@ -143,10 +143,19 @@ export default function ManagedCourses() {
     );
   };
 
-  //to view what state you selected
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
+  // //to view what state you selected
+  // useEffect(() => {
+  //   console.log(filters);
+  // }, [filters]);
+
+  const filteredCourses = managedCourses.data
+    ?.filter((course) => {
+      if (filters.state === "all") {
+        return true;
+      }
+      return course.state === filters.state;
+    })
+    .map((course) => renderCard(course));
 
   if (!account.isAdmin) {
     return null;
@@ -169,7 +178,10 @@ export default function ManagedCourses() {
           </div>
         )}
         <h1 className="text-2xl font-bold p-5">All Courses:</h1>
-        {managedCourses.data?.map((course) => renderCard(course))}
+        {filteredCourses}
+        {filteredCourses?.length === 0 && (
+          <Message type="warn">No Courses to Display</Message>
+        )}
       </section>
     </>
   );
